@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from "react";
 import p5 from "p5";
 
 export function ForceFieldBackground({
-  hue = 300, // Neon Pink/Purple
+  hue = 300,
   saturation = 100,
-  threshold = 100,
-  minStroke = 1,
-  maxStroke = 4,
-  spacing = 15, // Slightly wider spacing for performance
-  density = 1.5,
+  minStroke = 0.5, // Lowered minimum size so no pockets exist
+  maxStroke = 3.5,
+  spacing = 15,
+  density = 1.0, // Set to 1.0 to ensure a completely full grid
   magnifierEnabled = true,
   magnifierRadius = 250,
   forceStrength = 20,
@@ -22,7 +21,6 @@ export function ForceFieldBackground({
   const propsRef = useRef({
     hue,
     saturation,
-    threshold,
     minStroke,
     maxStroke,
     spacing,
@@ -38,7 +36,6 @@ export function ForceFieldBackground({
     propsRef.current = {
       hue,
       saturation,
-      threshold,
       minStroke,
       maxStroke,
       spacing,
@@ -52,7 +49,6 @@ export function ForceFieldBackground({
   }, [
     hue,
     saturation,
-    threshold,
     minStroke,
     maxStroke,
     spacing,
@@ -78,7 +74,6 @@ export function ForceFieldBackground({
       let lastHue = -1;
       let lastSaturation = -1;
       let lastSpacing = -1;
-      let lastDensity = -1;
 
       let magnifierX = 0;
       let magnifierY = 0;
@@ -107,7 +102,7 @@ export function ForceFieldBackground({
         p.push();
         p.colorMode(p.HSL);
         for (let i = 0; i < 12; i++) {
-          let lightness = p.map(i, 0, 11, 80, 20); // Bright to dark
+          let lightness = p.map(i, 0, 11, 80, 20);
           palette.push(p.color(h, s, lightness));
         }
         p.pop();
@@ -115,15 +110,11 @@ export function ForceFieldBackground({
 
       function generatePoints() {
         points = [];
-        const { spacing, density } = propsRef.current;
+        const { spacing } = propsRef.current;
         const safeSpacing = Math.max(4, spacing);
 
-        // Generate points based on screen size using Perlin noise instead of an image
         for (let y = 0; y < p.height; y += safeSpacing) {
           for (let x = 0; x < p.width; x += safeSpacing) {
-            if (p.random() > density) continue;
-
-            // Use noise to create organic clouds of particles
             let noiseVal = p.noise(x * 0.003, y * 0.003);
             let brightness = p.map(noiseVal, 0, 1, 0, 255);
 
@@ -137,13 +128,12 @@ export function ForceFieldBackground({
               pos: p.createVector(px, py),
               originalPos: p.createVector(px, py),
               vel: p.createVector(0, 0),
-              baseBrightness: brightness, // Store mathematical brightness
+              baseBrightness: brightness,
             });
           }
         }
 
         lastSpacing = spacing;
-        lastDensity = density;
       }
 
       function applyForceField(mx, my) {
@@ -156,41 +146,34 @@ export function ForceFieldBackground({
 
           if (d < props.magnifierRadius) {
             dir.normalize();
-            // Pushes particles away from the mouse
             let force = dir.mult(props.forceStrength / Math.max(1, d * 0.1));
             pt.vel.add(force);
           }
 
-          // Friction slows them down
           pt.vel.mult(props.friction);
-
-          // Restore force snaps them back to their original grid spot
           let restore = p5.Vector.sub(pt.pos, pt.originalPos).mult(
             -props.restoreSpeed,
           );
           pt.vel.add(restore);
-
           pt.pos.add(pt.vel);
         }
       }
 
       p.draw = () => {
-        p.clear(); // Transparent background so your site shows through
+        p.clear();
 
         const props = propsRef.current;
 
-        // Re-generate if settings change
         if (props.hue !== lastHue || props.saturation !== lastSaturation) {
           generatePalette(props.hue, props.saturation);
           lastHue = props.hue;
           lastSaturation = props.saturation;
         }
 
-        if (props.spacing !== lastSpacing || props.density !== lastDensity) {
+        if (props.spacing !== lastSpacing) {
           generatePoints();
         }
 
-        // Smooth mouse following
         magnifierX = p.lerp(magnifierX, p.mouseX, magnifierInertia);
         magnifierY = p.lerp(magnifierY, p.mouseY, magnifierInertia);
 
@@ -199,33 +182,29 @@ export function ForceFieldBackground({
         p.noFill();
 
         for (let pt of points) {
-          // Only draw particles that meet the brightness threshold
-          if (pt.baseBrightness > props.threshold) {
-            let shadeIndex = Math.floor(
-              p.map(pt.baseBrightness, 0, 255, 0, palette.length - 1),
-            );
-            shadeIndex = p.constrain(shadeIndex, 0, palette.length - 1);
+          let shadeIndex = Math.floor(
+            p.map(pt.baseBrightness, 0, 255, 0, palette.length - 1),
+          );
+          shadeIndex = p.constrain(shadeIndex, 0, palette.length - 1);
 
-            let strokeSize = p.map(
-              pt.baseBrightness,
-              0,
-              255,
-              props.minStroke,
-              props.maxStroke,
-            );
+          let strokeSize = p.map(
+            pt.baseBrightness,
+            0,
+            255,
+            props.minStroke,
+            props.maxStroke,
+          );
 
-            // Make particles bigger when the mouse gets near them
-            let d = p.dist(pt.pos.x, pt.pos.y, magnifierX, magnifierY);
-            if (props.magnifierEnabled && d < props.magnifierRadius) {
-              let factor = p.map(d, 0, props.magnifierRadius, 2.5, 1);
-              strokeSize *= factor;
-            }
+          let d = p.dist(pt.pos.x, pt.pos.y, magnifierX, magnifierY);
+          if (props.magnifierEnabled && d < props.magnifierRadius) {
+            let factor = p.map(d, 0, props.magnifierRadius, 2.5, 1);
+            strokeSize *= factor;
+          }
 
-            if (palette[shadeIndex]) {
-              p.stroke(palette[shadeIndex]);
-              p.strokeWeight(strokeSize);
-              p.point(pt.pos.x, pt.pos.y);
-            }
+          if (palette[shadeIndex]) {
+            p.stroke(palette[shadeIndex]);
+            p.strokeWeight(strokeSize);
+            p.point(pt.pos.x, pt.pos.y);
           }
         }
       };
@@ -241,7 +220,6 @@ export function ForceFieldBackground({
 
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
-      {/* Isolated Canvas Container */}
       <div
         ref={containerRef}
         className="absolute inset-0 z-0 pointer-events-auto"

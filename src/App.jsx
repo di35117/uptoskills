@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ForceFieldBackground } from "./ForceFieldBackground";
+
 const ChevronDown = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -47,6 +48,96 @@ const PlusIcon = () => (
     <path d="M12 5v14" />
   </svg>
 );
+
+// --- NEW COMPONENT: Neon Creepy Button ---
+const NeonCreepyButton = ({
+  children,
+  colorTheme = "cyan",
+  onClick,
+  ...props
+}) => {
+  const eyesRef = useRef(null);
+  const [eyeCoords, setEyeCoords] = useState({ x: 0, y: 0 });
+
+  const updateEyes = (e) => {
+    const userEvent = "touches" in e ? e.touches[0] : e;
+    if (!eyesRef.current) return;
+
+    const eyesRect = eyesRef.current.getBoundingClientRect();
+    const eyesCenter = {
+      x: eyesRect.left + eyesRect.width / 2,
+      y: eyesRect.top + eyesRect.height / 2,
+    };
+    const cursor = { x: userEvent.clientX, y: userEvent.clientY };
+
+    const dx = cursor.x - eyesCenter.x;
+    const dy = cursor.y - eyesCenter.y;
+    const angle = Math.atan2(-dy, dx) + Math.PI / 2;
+
+    const distance = Math.min(Math.hypot(dx, dy), 200);
+    const x = (Math.sin(angle) * distance) / 150;
+    const y = (Math.cos(angle) * distance) / 100;
+
+    setEyeCoords({ x, y });
+  };
+
+  const resetEyes = () => setEyeCoords({ x: 0, y: 0 });
+
+  const isCyan = colorTheme === "cyan";
+  const textColor = isCyan ? "text-cyan-400" : "text-pink-400";
+  const borderColor = isCyan ? "border-cyan-500/50" : "border-pink-500/50";
+  const shadowHover = isCyan
+    ? "hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]"
+    : "hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]";
+
+  return (
+    <button
+      className={`group relative inline-flex items-center justify-center p-0 border-0 bg-transparent cursor-pointer font-bold ${textColor}`}
+      onMouseMove={updateEyes}
+      onTouchMove={updateEyes}
+      onMouseLeave={resetEyes}
+      onClick={onClick}
+      {...props}
+    >
+      {/* Dark base that holds the eyes */}
+      <span className="absolute inset-0 bg-[#050508] rounded-full border border-white/5 z-0 shadow-lg"></span>
+
+      {/* The Eyes Container */}
+      <span
+        className="absolute right-6 top-1/2 -translate-y-1/2 flex gap-1.5 z-0 pointer-events-none"
+        ref={eyesRef}
+      >
+        <span className="w-2.5 h-2.5 bg-gray-200 rounded-full relative overflow-hidden animate-blink">
+          <span
+            className="absolute w-1.5 h-1.5 bg-black rounded-full"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: `translate(-50%, -50%) translate(${eyeCoords.x * 50}%, ${eyeCoords.y * 50}%)`,
+            }}
+          ></span>
+        </span>
+        <span className="w-2.5 h-2.5 bg-gray-200 rounded-full relative overflow-hidden animate-blink">
+          <span
+            className="absolute w-1.5 h-1.5 bg-black rounded-full"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: `translate(-50%, -50%) translate(${eyeCoords.x * 50}%, ${eyeCoords.y * 50}%)`,
+            }}
+          ></span>
+        </span>
+      </span>
+
+      {/* The Cover (Rotates away on hover to reveal eyes) */}
+      <span
+        className={`relative z-10 flex items-center justify-center gap-2 px-8 py-4 w-full h-full rounded-full bg-[#0a0a0f] border ${borderColor} transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)] origin-[20px_50%] group-hover:-rotate-[12deg] group-focus-visible:-rotate-[12deg] ${shadowHover}`}
+      >
+        {children}
+      </span>
+    </button>
+  );
+};
 
 const ScrollReveal = ({ children, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -133,21 +224,16 @@ const Navbar = () => (
 
 const Hero = () => (
   <section className="relative pt-40 pb-32 px-6 flex flex-col items-center text-center min-h-screen justify-center overflow-hidden">
-    {/* NEW: The Force Field Background sitting behind everything */}
     <div className="absolute inset-0 z-0 opacity-50 mix-blend-screen">
       <ForceFieldBackground />
     </div>
 
-    {/* The existing ambient glowing orbs */}
     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-[120px] -z-10 animate-pulse"></div>
     <div
       className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] -z-10 animate-pulse"
       style={{ animationDelay: "1s" }}
     ></div>
 
-    {/* IMPORTANT: pointer-events-none allows the mouse to pass through the text 
-        and interact with the canvas behind it 
-    */}
     <div className="relative z-10 flex flex-col items-center pointer-events-none w-full">
       <ScrollReveal>
         <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-semibold tracking-widest text-gray-300 uppercase">
@@ -171,29 +257,30 @@ const Hero = () => (
       </ScrollReveal>
 
       <ScrollReveal delay={300}>
-        <p className="max-w-2xl text-lg text-gray-400 mb-10">
+        {/* NEW: Frosted glass background to make this paragraph pop against the particles */}
+        <p className="max-w-2xl text-lg text-gray-200 font-medium mb-10 bg-[#050508]/40 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10 drop-shadow-xl">
           The industry standard for hackathon hosting. Whether you're a global
           enterprise looking for high-impact results or a college faculty
           building student communities.
         </p>
       </ScrollReveal>
 
-      {/* IMPORTANT: pointer-events-auto turns clicking back on 
-          so your buttons actually work! 
-      */}
       <ScrollReveal delay={400}>
-        <div className="flex flex-col sm:flex-row gap-4 pointer-events-auto">
-          <button className="px-8 py-4 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/50 font-bold hover:bg-cyan-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]">
+        {/* NEW: Replaced standard buttons with Neon Creepy Buttons */}
+        <div className="flex flex-col sm:flex-row gap-6 pointer-events-auto">
+          <NeonCreepyButton colorTheme="cyan">
             For Companies <span>→</span>
-          </button>
-          <button className="px-8 py-4 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/50 font-bold hover:bg-pink-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)]">
+          </NeonCreepyButton>
+
+          <NeonCreepyButton colorTheme="pink">
             For Universities <PlusIcon />
-          </button>
+          </NeonCreepyButton>
         </div>
       </ScrollReveal>
     </div>
   </section>
 );
+
 const Stats = () => {
   const stats = [
     {
@@ -262,7 +349,6 @@ const SetupSection = () => (
             Bespoke hackathons & recruitment drives managed through an advanced,
             highly-secure dashboard.
           </p>
-
           <div className="space-y-4 mb-10">
             {[
               "Custom Branding & Portals",
@@ -300,7 +386,6 @@ const SetupSection = () => (
             Empower students with self-serve tools to launch hackathons and
             workshops in minutes.
           </p>
-
           <div className="space-y-4 mb-10">
             {[
               "Self-Serve Event Creation",
@@ -386,7 +471,6 @@ const Timeline = () => {
 
       <div className="relative flex flex-col items-center">
         <div className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 via-pink-500/50 to-green-500/50"></div>
-
         {stages.map((stage, i) => (
           <ScrollReveal key={i} delay={i * 150}>
             <div className={`w-full flex ${stage.align} mb-8 relative z-10`}>
@@ -615,7 +699,6 @@ const Footer = () => (
           </div>
         </div>
       </div>
-
       <div>
         <h4 className="font-bold mb-6 text-white tracking-wide">
           Our Services
@@ -638,7 +721,6 @@ const Footer = () => (
           </li>
         </ul>
       </div>
-
       <div>
         <h4 className="font-bold mb-6 text-white tracking-wide">
           Jobs & Internships
@@ -661,7 +743,6 @@ const Footer = () => (
           </li>
         </ul>
       </div>
-
       <div>
         <h4 className="font-bold mb-6 text-white tracking-wide">
           Contact Info
@@ -695,7 +776,7 @@ const Footer = () => (
 
 function App() {
   return (
-    <div className="min-h-screen selection:bg-purple-500/30 font-sans">
+    <div className="min-h-screen selection:bg-purple-500/30 font-sans bg-[#020203]">
       <Navbar />
       <main className="overflow-hidden">
         <Hero />
