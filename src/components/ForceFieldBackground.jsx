@@ -4,10 +4,10 @@ import p5 from "p5";
 export function ForceFieldBackground({
   hue = 300,
   saturation = 100,
-  minStroke = 0.5, // Lowered minimum size so no pockets exist
+  minStroke = 0.5,
   maxStroke = 3.5,
   spacing = 15,
-  density = 1.0, // Set to 1.0 to ensure a completely full grid
+  density = 1.0,
   magnifierEnabled = true,
   magnifierRadius = 250,
   forceStrength = 20,
