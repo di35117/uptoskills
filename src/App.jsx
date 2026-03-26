@@ -16,6 +16,7 @@ import { ForceFieldBackground } from "./ForceFieldBackground";
 // Register the ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
+// --- GLOBAL ICONS (Used in Hero, Timeline, FAQ, etc.) ---
 const ChevronDown = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +65,107 @@ const PlusIcon = () => (
   </svg>
 );
 
+// --- NAVBAR SPECIFIC ICONS ---
+const NavSearchIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5 text-gray-300"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
+
+const ChatIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5 text-orange-400"
+  >
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+const NotificationIcon = () => (
+  <div className="relative">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-5 h-5 text-yellow-500"
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+    <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
+      2
+    </span>
+  </div>
+);
+
+const MenuIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-6 h-6"
+  >
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-6 h-6"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const NavChevronDown = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-4 h-4 transition-transform group-hover:-translate-y-0.5"
+  >
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
 // --- UTILITY COMPONENTS ---
 const ScrollReveal = ({ children, delay = 0, triggerOnce = false }) => {
   const domRef = useRef();
@@ -98,6 +200,86 @@ const ScrollReveal = ({ children, delay = 0, triggerOnce = false }) => {
   return (
     <div ref={domRef} className="w-full h-full will-change-transform">
       {children}
+    </div>
+  );
+};
+
+// --- PARALLAX FALLING STARS BACKGROUND ---
+const generateBoxShadows = (n) => {
+  let value = `${Math.floor(Math.random() * 4000)}px ${Math.floor(Math.random() * 2000)}px #FFF`;
+  for (let i = 2; i <= n; i++) {
+    value += `, ${Math.floor(Math.random() * 4000)}px ${Math.floor(Math.random() * 2000)}px #FFF`;
+  }
+  return value;
+};
+
+const ParallaxStarsBackground = ({ speed = 1, className = "" }) => {
+  const shadowsSmall = useMemo(() => generateBoxShadows(700), []);
+  const shadowsMedium = useMemo(() => generateBoxShadows(200), []);
+  const shadowsBig = useMemo(() => generateBoxShadows(100), []);
+
+  return (
+    <div
+      className={`fixed inset-0 pointer-events-none z-0 overflow-hidden ${className}`}
+    >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .bg-radial-space {
+            background: radial-gradient(ellipse at top, #0b101e 0%, #020203 100%);
+          }
+          @keyframes animStarFall {
+            from { transform: translateY(0px); }
+            to { transform: translateY(2000px); }
+          }
+        `,
+        }}
+      />
+
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-radial-space z-0 opacity-80" />
+
+      {/* Stars Layer 1 */}
+      <div
+        className="absolute left-0 top-0 w-[1px] h-[1px] bg-white rounded-full opacity-100"
+        style={{
+          boxShadow: shadowsSmall,
+          animation: `animStarFall ${50 / speed}s linear infinite`,
+        }}
+      >
+        <div
+          className="absolute top-[-2000px] w-[1px] h-[1px] bg-white rounded-full"
+          style={{ boxShadow: shadowsSmall }}
+        />
+      </div>
+
+      {/* Stars Layer 2 */}
+      <div
+        className="absolute left-0 top-0 w-[2px] h-[2px] bg-white rounded-full opacity-90"
+        style={{
+          boxShadow: shadowsMedium,
+          animation: `animStarFall ${100 / speed}s linear infinite`,
+        }}
+      >
+        <div
+          className="absolute top-[-2000px] w-[2px] h-[2px] bg-white rounded-full"
+          style={{ boxShadow: shadowsMedium }}
+        />
+      </div>
+
+      {/* Stars Layer 3 */}
+      <div
+        className="absolute left-0 top-0 w-[3px] h-[3px] bg-white rounded-full opacity-80"
+        style={{
+          boxShadow: shadowsBig,
+          animation: `animStarFall ${150 / speed}s linear infinite`,
+        }}
+      >
+        <div
+          className="absolute top-[-2000px] w-[3px] h-[3px] bg-white rounded-full"
+          style={{ boxShadow: shadowsBig }}
+        />
+      </div>
     </div>
   );
 };
@@ -351,7 +533,29 @@ const GlowingEdgeCard = ({
                 opacity: 0 !important;
                 transition: opacity 0.75s ease-in-out;
             }
-        `
+
+            /* --- MOBILE PULSE OVERRIDE --- */
+            @media (max-width: 1024px) {
+                .group:not(:hover):not(.animating) .glowing-card-mesh-border {
+                    opacity: 0.8 !important;
+                    mask-image: none !important;
+                    animation: mobileEdgePulse 3s ease-in-out infinite alternate !important;
+                }
+                .group:not(:hover):not(.animating) .glowing-card-glow {
+                    opacity: 0.5 !important;
+                    mask-image: none !important;
+                    animation: mobileGlowPulse 3s ease-in-out infinite alternate !important;
+                }
+                @keyframes mobileEdgePulse {
+                    0% { opacity: 0.2; }
+                    100% { opacity: 0.9; }
+                }
+                @keyframes mobileGlowPulse {
+                    0% { opacity: 0.1; }
+                    100% { opacity: 0.6; }
+                }
+            }
+        `,
         }}
       />
 
@@ -858,56 +1062,188 @@ const ParticleCard = ({
   );
 };
 
-// --- PAGE COMPONENTS ---
-const Navbar = () => (
-  <nav className="fixed top-0 w-full z-50 bg-[#050508]/80 backdrop-blur-md border-b border-white/10">
-    <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-          UptoSkills
-        </span>
-      </div>
-      <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-        <a
-          href="#"
-          className="hover:text-white transition-colors flex items-center gap-1"
-        >
-          Learn & Earn <ChevronDown />
-        </a>
-        <a
-          href="#"
-          className="hover:text-white transition-colors flex items-center gap-1"
-        >
-          Jobs <ChevronDown />
-        </a>
-        <a
-          href="#"
-          className="hover:text-white transition-colors flex items-center gap-1"
-        >
-          Compete <ChevronDown />
-        </a>
-        <a
-          href="#"
-          className="hover:text-white transition-colors flex items-center gap-1"
-        >
-          Discover <ChevronDown />
-        </a>
-      </div>
-      <div className="flex items-center gap-6">
-        <button className="text-gray-400 hover:text-white">
-          <SearchIcon />
-        </button>
-        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500"></div>
-        <button className="hidden md:block px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:opacity-90 transition-opacity">
-          For Enterprise
-        </button>
-      </div>
-    </div>
-  </nav>
+// --- NEW NAVBAR COMPONENTS ---
+const navItems = [
+  { name: "Learn & Earn", links: ["Sub Link 1", "Sub Link 2", "Sub Link 3"] },
+  {
+    name: "Jobs",
+    links: ["All Jobs", "IT Jobs", "Non-IT Jobs", "Internships"],
+  },
+  { name: "Compete", links: ["Events", "Hackathons", "Leagues"] },
+  { name: "Discover", links: ["Support", "Hall of Fame", "Hackathons"] },
+];
+
+const UserActions = () => (
+  <div className="flex flex-row items-center gap-4">
+    <button className="text-gray-300 transition hover:text-white">
+      <NavSearchIcon />
+    </button>
+    <button className="text-gray-300 transition hover:text-white">
+      <ChatIcon />
+    </button>
+    <button className="text-gray-300 transition hover:text-white">
+      <NotificationIcon />
+    </button>
+    <button className="relative w-9 h-9 overflow-hidden border-2 border-orange-500 rounded-full ml-1">
+      <img
+        src="https://res.cloudinary.com/dv59954/image/upload/v1642194635/uptoskills-user-profile.webp"
+        alt="User Profile"
+        className="object-cover w-full h-full"
+      />
+    </button>
+  </div>
 );
 
+const DropdownMenu = ({ links }) => (
+  <ul className="absolute left-0 w-48 py-2 mt-2 bg-[#0e1525] border border-gray-700 rounded-lg shadow-xl top-full">
+    {links.map((link, index) => (
+      <li key={index}>
+        <a
+          href="#"
+          className="block px-5 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white"
+        >
+          {link}
+        </a>
+      </li>
+    ))}
+  </ul>
+);
+
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  return (
+    <nav className="fixed top-0 z-50 w-full border-b border-gray-800 bg-[#0e1525]">
+      <div className="flex flex-row items-center justify-between px-6 h-20 mx-auto max-w-7xl">
+        {/* Left Side: Logo & Menu Button */}
+        <div className="flex flex-row items-center gap-4">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-gray-200 focus:outline-none md:hidden"
+          >
+            {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+          </button>
+          {/* Logo */}
+          <img
+            src="https://res.cloudinary.com/dffm4zxpc/image/upload/v1774514098/uptoskillslogo-removebg-preview_vjal22.webp"
+            alt="UptoSkills Logo"
+            className="h-10 md:h-12 object-contain"
+          />
+        </div>
+
+        {/* Center Side: Nav Links (Desktop) */}
+        <ul className="flex-row items-center gap-8 hidden md:flex h-full">
+          {navItems.map((item, index) => (
+            <li
+              key={index}
+              className="relative group h-full flex items-center"
+              onMouseEnter={() => setActiveDropdown(item.name)}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button className="flex flex-row items-center gap-1.5 py-2.5 text-[15px] font-semibold text-gray-200 transition hover:text-white">
+                {item.name}
+                <NavChevronDown />
+              </button>
+              {activeDropdown === item.name && (
+                <DropdownMenu links={item.links} />
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {/* Right Side: Icons, Profile, Button */}
+        <div className="flex flex-row items-center gap-6">
+          {/* User Icons (hidden on mobile, inside drawer) */}
+          <div className="hidden md:block">
+            <UserActions />
+          </div>
+
+          {/* Enterprise Button */}
+          <button className="flex flex-row items-center gap-1.5 px-6 py-2.5 text-sm font-bold text-white transition rounded-full bg-gradient-to-r from-orange-500 to-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:opacity-90 hidden md:flex">
+            For Enterprise
+          </button>
+        </div>
+      </div>
+
+      {/* --- Mobile Drawer Menu --- */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 top-20 z-40 bg-black bg-opacity-50 md:hidden"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          <div
+            className="absolute top-0 left-0 w-3/4 sm:w-1/2 h-full bg-[#0e1525] p-6 flex flex-col gap-6 shadow-2xl border-t border-gray-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Main Content */}
+            <div className="flex flex-col flex-grow gap-6 overflow-y-auto pb-6">
+              {/* Search */}
+              <div className="flex flex-row items-center w-full gap-3 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg">
+                <NavSearchIcon />
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="flex-grow text-sm text-white placeholder-gray-400 bg-transparent outline-none"
+                />
+              </div>
+
+              {/* User Actions Mobile */}
+              <div className="flex justify-around items-center border-b border-gray-800 pb-6">
+                <button className="text-gray-300 transition hover:text-white">
+                  <ChatIcon />
+                </button>
+                <button className="text-gray-300 transition hover:text-white">
+                  <NotificationIcon />
+                </button>
+                <button className="relative w-10 h-10 overflow-hidden border-2 border-orange-500 rounded-full">
+                  <img
+                    src="https://res.cloudinary.com/dv59954/image/upload/v1642194635/uptoskills-user-profile.webp"
+                    alt="User Profile"
+                    className="object-cover w-full h-full"
+                  />
+                </button>
+              </div>
+
+              {/* Nav Links */}
+              <ul className="flex flex-col gap-4">
+                {navItems.map((item, index) => (
+                  <li key={index} className="group">
+                    <button className="flex flex-row items-center justify-between w-full py-2 text-base font-semibold text-gray-200 transition hover:text-white">
+                      {item.name}
+                      <NavChevronDown />
+                    </button>
+                    <ul className="hidden pl-4 mt-2 space-y-3 group-hover:block border-l border-gray-800 ml-2">
+                      {item.links.map((link, idx) => (
+                        <li key={idx}>
+                          <a
+                            href="#"
+                            className="text-sm font-medium text-gray-400 transition hover:text-white"
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Enterprise Button */}
+              <button className="flex flex-row items-center justify-center w-full gap-1.5 px-8 py-3.5 mt-auto font-bold text-white transition rounded-full shadow-[0_0_15px_rgba(249,115,22,0.3)] bg-gradient-to-r from-orange-500 to-orange-600 hover:opacity-90">
+                For Enterprise
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
 const Hero = () => (
-  <section className="relative pt-40 pb-32 px-6 flex flex-col items-center text-center min-h-screen justify-center overflow-hidden">
+  <section className="relative pt-40 pb-32 px-6 flex flex-col items-center text-center min-h-screen justify-center overflow-hidden bg-[#020203] z-20">
     <div className="absolute inset-0 z-0 opacity-50 mix-blend-screen">
       <ForceFieldBackground />
     </div>
@@ -918,7 +1254,6 @@ const Hero = () => (
     ></div>
 
     <div className="relative z-10 flex flex-col items-center pointer-events-none w-full">
-      {/* FIX: Centered the top badge by wrapping it in a flex container */}
       <ScrollReveal triggerOnce={true}>
         <div className="flex w-full justify-center">
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-semibold tracking-widest text-gray-300 uppercase">
@@ -940,7 +1275,8 @@ const Hero = () => (
         </h2>
       </ScrollReveal>
       <ScrollReveal delay={300} triggerOnce={true}>
-        <p className="max-w-2xl text-lg text-gray-200 font-medium mb-10 bg-[#050508]/40 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10 drop-shadow-xl mx-auto">
+        {/* UPDATED: Removed background, border, and padding classes */}
+        <p className="max-w-2xl text-lg text-gray-200 font-medium mb-10 mx-auto">
           The industry standard for hackathon hosting. Whether you're a global
           enterprise looking for high-impact results or a college faculty
           building student communities.
@@ -994,7 +1330,7 @@ const Stats = () => {
 
   return (
     <section className="py-20 px-6 max-w-7xl mx-auto flex flex-col items-center">
-      <div className="h-[300px] flex justify-center w-full">
+      <div className="h-[250px] md:h-[300px] flex justify-center w-full scale-[0.55] sm:scale-75 md:scale-100 origin-top md:origin-center mt-10 md:mt-0">
         <CardSwap
           width={460}
           height={220}
@@ -1306,27 +1642,27 @@ const ProFeatures = () => {
       <ScrollReveal delay={200}>
         <div className="flex justify-center items-center py-10">
           <div>
-            <div className="grid grid-cols-2 gap-6 rotate-45">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 rotate-45">
               {features.map((f, i) => (
                 <div
                   key={i}
-                  className={`w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-xl bg-[#0a0a0f]/90 border-2 ${f.border} glow-pulse-${f.colorName} group relative overflow-hidden cursor-default z-10 hover:z-20`}
+                  className={`w-[110px] h-[110px] sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-xl bg-[#0a0a0f]/90 border-2 ${f.border} glow-pulse-${f.colorName} group relative overflow-hidden cursor-default z-10 hover:z-20`}
                 >
                   <div className="absolute inset-0">
-                    <div className="absolute inset-0 -rotate-45 flex items-center justify-center p-6 text-center">
+                    <div className="absolute inset-0 -rotate-45 flex items-center justify-center p-2 sm:p-4 md:p-6 text-center">
                       <div
-                        className={`flex flex-col items-center justify-center transition-all duration-500 opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-75 absolute px-4`}
+                        className={`flex flex-col items-center justify-center transition-all duration-500 opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-75 absolute px-2 sm:px-4`}
                       >
-                        <span className="text-3xl sm:text-4xl mb-3 drop-shadow-md">
+                        <span className="text-2xl sm:text-3xl md:text-4xl mb-1 sm:mb-3 drop-shadow-md">
                           {f.icon}
                         </span>
                         <h4
-                          className={`text-lg sm:text-2xl font-black ${f.textColor}`}
+                          className={`text-[10px] leading-tight sm:text-lg md:text-2xl font-black ${f.textColor}`}
                         >
                           {f.title}
                         </h4>
                       </div>
-                      <p className="text-xs sm:text-base font-medium text-white opacity-0 scale-125 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100 absolute px-6">
+                      <p className="text-[8px] leading-tight sm:text-xs md:text-base font-medium text-white opacity-0 scale-125 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100 absolute px-3 sm:px-6">
                         {f.desc}
                       </p>
                     </div>
@@ -1547,99 +1883,491 @@ const FAQ = () => {
   );
 };
 
+// --- NEW FOOTER MATCHING THE IMAGE ---
+const FooterLink = ({ icon, text }) => (
+  <li className="flex items-center gap-3 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer group">
+    <span className="text-gray-400 group-hover:text-cyan-400">{icon}</span>
+    <span>{text}</span>
+  </li>
+);
+
+// Minimal inline SVGs to match the list items
+const SvgIcon = ({ d, ...props }) => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    {d}
+  </svg>
+);
+const IconCap = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M2 10l10-5 10 5-10 5z" />
+        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+        <path d="M22 10v6" />
+      </>
+    }
+  />
+);
+const IconBuilding = () => (
+  <SvgIcon
+    d={
+      <>
+        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+        <path d="M9 22v-4h6v4" />
+        <path d="M8 6h.01" />
+        <path d="M16 6h.01" />
+        <path d="M12 6h.01" />
+        <path d="M12 10h.01" />
+        <path d="M12 14h.01" />
+        <path d="M16 10h.01" />
+        <path d="M16 14h.01" />
+        <path d="M8 10h.01" />
+        <path d="M8 14h.01" />
+      </>
+    }
+  />
+);
+const IconMonitor = () => (
+  <SvgIcon
+    d={
+      <>
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+        <line x1="8" y1="21" x2="16" y2="21" />
+        <line x1="12" y1="17" x2="12" y2="21" />
+      </>
+    }
+  />
+);
+const IconSearch = () => (
+  <SvgIcon
+    d={
+      <>
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </>
+    }
+  />
+);
+const IconUsers = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </>
+    }
+  />
+);
+const IconBriefcase = () => (
+  <SvgIcon
+    d={
+      <>
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </>
+    }
+  />
+);
+const IconInfinity = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M18.178 7.822a4 4 0 0 0-5.656 0L12 8.343l-1.522-.521a4 4 0 1 0 0 5.656L12 13.999l.522-.521a4 4 0 1 0 5.656-5.656z" />
+      </>
+    }
+  />
+);
+const IconCode = () => (
+  <SvgIcon
+    d={
+      <>
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </>
+    }
+  />
+);
+const IconTrophy = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 22h16" />
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+      </>
+    }
+  />
+);
+const IconRibbon = () => (
+  <SvgIcon
+    d={
+      <>
+        <circle cx="12" cy="8" r="7" />
+        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+      </>
+    }
+  />
+);
+const IconCalendar = () => (
+  <SvgIcon
+    d={
+      <>
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </>
+    }
+  />
+);
+const IconMessage = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </>
+    }
+  />
+);
+const IconHelp = () => (
+  <SvgIcon
+    d={
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </>
+    }
+  />
+);
+const IconPhoneCall = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+      </>
+    }
+  />
+);
+const IconShield = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </>
+    }
+  />
+);
+const IconMapPin = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </>
+    }
+  />
+);
+const IconMail = () => (
+  <SvgIcon
+    d={
+      <>
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline points="22,6 12,13 2,6" />
+      </>
+    }
+  />
+);
+
 const Footer = () => (
-  <footer className="border-t border-white/10 bg-[#020203] pt-16 pb-8 px-6">
-    <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-      <div className="col-span-2 md:col-span-2">
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">
-          UptoSkills
-        </h3>
-        <p className="text-gray-400 text-sm mb-6 max-w-xs leading-relaxed">
-          Connecting Colleges, Candidates, and Corporates. EMPOWERING THE NEXT
-          GENERATION.
+  <footer className="bg-[#0e1525] pt-16 pb-12 px-6 relative z-20">
+    <div className="max-w-7xl mx-auto">
+      {/* Top Section */}
+      <div className="flex flex-col items-center justify-center text-center mb-12">
+        <div className="flex items-center justify-center mb-4">
+          <img
+            src="https://res.cloudinary.com/dffm4zxpc/image/upload/v1774514098/uptoskillslogo-removebg-preview_vjal22.webp"
+            alt="UptoSkills Logo"
+            className="h-16 md:h-20 object-contain"
+          />
+        </div>
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-200 mt-6 mb-2">
+          Connecting Colleges, Candidates, and Corporates
+        </h2>
+        <p className="text-gray-400 text-sm">
+          Empowering the next generation through AI-powered learning
         </p>
-        <div className="flex gap-4">
-          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-sm font-bold">
-            in
-          </div>
-          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-sm font-bold">
-            ig
-          </div>
-          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-colors text-sm font-bold">
-            tw
-          </div>
+      </div>
+
+      {/* Grid Columns */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
+        {/* Col 1 */}
+        <div>
+          <h4 className="font-bold text-white flex items-center gap-2 mb-6">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-400"
+            >
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Our Services
+          </h4>
+          <ul className="space-y-4">
+            <FooterLink icon={<IconCap />} text="For Colleges" />
+            <FooterLink icon={<IconBuilding />} text="For Companies" />
+            <FooterLink icon={<IconMonitor />} text="AI Interview" />
+            <FooterLink icon={<IconSearch />} text="AI Assessment" />
+            <FooterLink icon={<IconBuilding />} text="Campus Collaboration" />
+            <FooterLink icon={<IconUsers />} text="Hire Better with Us" />
+            <FooterLink icon={<IconCap />} text="College Services" />
+          </ul>
+        </div>
+
+        {/* Col 2 */}
+        <div>
+          <h4 className="font-bold text-white flex items-center gap-2 mb-6">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-400"
+            >
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            Jobs & Internships
+          </h4>
+          <ul className="space-y-4">
+            <FooterLink icon={<IconBriefcase />} text="Jobs" />
+            <FooterLink icon={<IconInfinity />} text="Internships" />
+            <FooterLink icon={<IconCode />} text="IT & CS Jobs" />
+            <FooterLink icon={<IconSearch />} text="Technical Jobs" />
+            <FooterLink icon={<IconUsers />} text="Sales & Marketing Jobs" />
+            <FooterLink icon={<IconBuilding />} text="Banking & E-Com Jobs" />
+          </ul>
+        </div>
+
+        {/* Col 3 */}
+        <div>
+          <h4 className="font-bold text-white flex items-center gap-2 mb-6">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-400"
+            >
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+            Leagues and Events
+          </h4>
+          <ul className="space-y-4">
+            <FooterLink icon={<IconMonitor />} text="My Leagues" />
+            <FooterLink icon={<IconTrophy />} text="Hall of Fame" />
+            <FooterLink icon={<IconRibbon />} text="Subscription" />
+            <FooterLink icon={<IconUsers />} text="Community" />
+            <FooterLink icon={<IconCalendar />} text="Events" />
+            <FooterLink icon={<IconCode />} text="Hackathons" />
+          </ul>
+        </div>
+
+        {/* Col 4 */}
+        <div>
+          <h4 className="font-bold text-white flex items-center gap-2 mb-6">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-400"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+            Discover
+          </h4>
+          <ul className="space-y-4">
+            <FooterLink icon={<IconMessage />} text="Blog Shorts" />
+            <FooterLink icon={<IconHelp />} text="Support & FAQ" />
+            <FooterLink icon={<IconPhoneCall />} text="Contact Us" />
+            <FooterLink icon={<IconShield />} text="Privacy Policy" />
+            <FooterLink icon={<IconShield />} text="Terms & Conditions" />
+            <FooterLink icon={<IconShield />} text="Shipping Policy" />
+            <FooterLink icon={<IconShield />} text="Cancellation Policy" />
+          </ul>
+        </div>
+
+        {/* Col 5 */}
+        <div>
+          <h4 className="font-bold text-white flex items-center gap-2 mb-6">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-400"
+            >
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            Contact Info
+          </h4>
+          <ul className="space-y-4">
+            <FooterLink icon={<IconMapPin />} text="Palam, New Delhi" />
+            <FooterLink icon={<IconMail />} text="info@uptoskills.com" />
+            <FooterLink icon={<IconPhoneCall />} text="+91-9319772294" />
+          </ul>
         </div>
       </div>
-      <div>
-        <h4 className="font-bold mb-6 text-white tracking-wide">
-          Our Services
-        </h4>
-        <ul className="space-y-4 text-sm text-gray-400">
-          <li>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              For Companies
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              AI Interview
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              AI Assessment
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="font-bold mb-6 text-white tracking-wide">
-          Jobs & Internships
-        </h4>
-        <ul className="space-y-4 text-sm text-gray-400">
-          <li>
-            <a href="#" className="hover:text-pink-400 transition-colors">
-              Internships
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-400 transition-colors">
-              IT & CS Jobs
-            </a>
-          </li>
-          <li>
-            <a href="#" className="hover:text-pink-400 transition-colors">
-              Technical Jobs
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="font-bold mb-6 text-white tracking-wide">
-          Contact Info
-        </h4>
-        <ul className="space-y-4 text-sm text-gray-400">
-          <li className="flex items-center gap-2">
-            <span>📍</span> Palam, New Delhi
-          </li>
-          <li className="flex items-center gap-2">
-            <span>✉️</span> info@uptoskills.com
-          </li>
-          <li className="flex items-center gap-2">
-            <span>📞</span> +91-9319772294
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div className="max-w-7xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 font-medium">
-      <p>© 2026 UptoSkills. All rights reserved.</p>
-      <div className="flex gap-6 mt-4 md:mt-0">
-        <a href="#" className="hover:text-white transition-colors">
-          Privacy Policy
-        </a>
-        <a href="#" className="hover:text-white transition-colors">
-          Terms of Service
-        </a>
+
+      <hr className="border-white/10 mb-8" />
+
+      {/* Bottom Social & App Section */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+          <h4 className="font-bold text-white mb-4 text-center md:text-left">
+            Connect with us
+          </h4>
+          <div className="flex gap-4">
+            <div className="w-8 h-8 rounded-md bg-[#0077b5] flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </div>
+            <div className="w-8 h-8 rounded-md bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </div>
+            <div className="w-8 h-8 rounded-md bg-[#1da1f2] flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+              </svg>
+            </div>
+            <div className="w-8 h-8 rounded-md bg-[#ff0000] flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
+            </div>
+            <div className="w-8 h-8 rounded-md bg-[#5865F2] flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" />
+              </svg>
+            </div>
+            <div className="w-8 h-8 rounded-md bg-[#0088cc] flex items-center justify-center text-white cursor-pointer hover:opacity-80 transition-opacity">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center md:items-end">
+          <h4 className="font-bold text-white mb-4">Download Our App</h4>
+          <div className="flex items-center gap-3 bg-[#11231f] border border-green-800/60 hover:bg-[#16332c] transition-colors rounded-lg px-4 py-2 cursor-pointer w-fit shadow-lg shadow-green-900/20">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M4 3L18 12L4 21V3Z" fill="#32c36c" />
+              <path d="M4 3L11.5 16.5L18 12L4 3Z" fill="#1f9b52" />
+            </svg>
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] text-gray-300 uppercase leading-none mb-1">
+                Get it on
+              </span>
+              <span className="text-sm text-white font-semibold leading-none mb-1">
+                Google Play
+              </span>
+              <span className="text-[10px] text-green-400 font-medium leading-none">
+                Live Now!
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </footer>
@@ -1649,15 +2377,25 @@ function App() {
   return (
     <div className="min-h-screen selection:bg-purple-500/30 font-sans bg-[#020203] relative">
       <Navbar />
-      <main className="overflow-hidden">
+
+      <ParallaxStarsBackground speed={1.5} />
+
+      <main className="relative w-full flex flex-col mt-20">
+        {/* Solid background on Hero covers the fixed stars */}
         <Hero />
-        <Stats />
-        <SetupSection />
-        <Timeline />
-        <ProFeatures />
-        <FeatureGrid />
-        <FAQ />
+
+        {/* Transparent wrapper explicitly for middle sections, allowing stars to shine through */}
+        <div className="relative w-full z-10 overflow-hidden">
+          <Stats />
+          <SetupSection />
+          <Timeline />
+          <ProFeatures />
+          <FeatureGrid />
+          <FAQ />
+        </div>
       </main>
+
+      {/* Solid background on Footer covers the fixed stars */}
       <Footer />
     </div>
   );
