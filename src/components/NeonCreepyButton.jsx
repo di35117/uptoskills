@@ -42,7 +42,7 @@ export const NeonCreepyButton = ({
 
   return (
     <button
-      className={`group relative inline-flex items-center justify-center p-0 border-0 bg-transparent cursor-pointer font-bold ${textColor}`}
+      className={`group relative inline-flex items-center justify-center p-0 border-0 bg-transparent font-bold ${textColor} z-50 cursor-pointer pointer-events-auto`}
       onMouseMove={updateEyes}
       onTouchMove={updateEyes}
       onMouseLeave={resetEyes}

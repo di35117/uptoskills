@@ -15,21 +15,21 @@ export const Hero = () => (
       style={{ animationDelay: "1s" }}
     ></div>
 
-    <div className="relative z-10 flex flex-col items-center pointer-events-none w-full">
+    <div className="relative z-10 flex flex-col items-center w-full">
       <ScrollReveal triggerOnce={true}>
-        <div className="flex w-full justify-center">
+        <div className="flex w-full justify-center pointer-events-none">
           <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-semibold tracking-widest text-gray-300 uppercase">
             The World's Best Competition Platform
           </div>
         </div>
       </ScrollReveal>
       <ScrollReveal delay={100} triggerOnce={true}>
-        <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-gray-500 bg-clip-text text-transparent drop-shadow-2xl animate-float">
+        <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-gray-500 bg-clip-text text-transparent drop-shadow-2xl animate-float pointer-events-none">
           THRILL
         </h1>
       </ScrollReveal>
       <ScrollReveal delay={200} triggerOnce={true}>
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 pointer-events-none">
           Unleash Innovation with <br />
           <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]">
             Thrill Engine
@@ -37,14 +37,18 @@ export const Hero = () => (
         </h2>
       </ScrollReveal>
       <ScrollReveal delay={300} triggerOnce={true}>
-        <p className="max-w-2xl text-lg text-gray-200 font-medium mb-10 mx-auto">
+        <p className="max-w-2xl text-lg text-gray-200 font-medium mb-10 mx-auto pointer-events-none">
           The industry standard for hackathon hosting. Whether you're a global
           enterprise looking for high-impact results or a college faculty
           building student communities.
         </p>
       </ScrollReveal>
-      <ScrollReveal delay={400} triggerOnce={true}>
-        <div className="flex flex-col sm:flex-row gap-6 pointer-events-auto justify-center">
+      <ScrollReveal
+        delay={400}
+        triggerOnce={true}
+        className="pointer-events-auto z-50"
+      >
+        <div className="flex flex-col sm:flex-row gap-6 pointer-events-auto justify-center z-50 relative">
           <NeonCreepyButton colorTheme="cyan">
             For Companies <span>→</span>
           </NeonCreepyButton>

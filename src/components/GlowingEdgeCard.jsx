@@ -138,7 +138,7 @@ export const GlowingEdgeCard = ({
       ref={cardRef}
       onPointerMove={handlePointerMove}
       style={{
-        touchAction: "pan-y", // Forces vertical scroll availability on mobile
+        touchAction: "pan-y",
         "--glow-sens": "30",
         "--pointer-x": "50%",
         "--pointer-y": "50%",
@@ -250,7 +250,6 @@ export const GlowingEdgeCard = ({
                 transition: opacity 0.75s ease-in-out;
             }
 
-            /* --- MOBILE PULSE OVERRIDE --- */
             @media (max-width: 1024px) {
                 .group:not(:hover):not(.animating) .glowing-card-mesh-border {
                     opacity: 0.8 !important;
@@ -274,13 +273,9 @@ export const GlowingEdgeCard = ({
         `,
         }}
       />
-
-      {/* Background Layers */}
       <div className="glowing-card-mesh-border" />
       <div className="glowing-card-mesh-bg" />
       <div className="glowing-card-glow" />
-
-      {/* Content Container */}
       <div className="relative z-10 w-full h-full bg-[#050508] rounded-[inherit] border border-white/5">
         {children}
       </div>

@@ -1,108 +1,13 @@
 import React, {
-  useState,
-  useEffect,
+  forwardRef,
+  useMemo,
   useRef,
+  useEffect,
   Children,
   cloneElement,
-  forwardRef,
   isValidElement,
-  useMemo,
-  useCallback,
 } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ForceFieldBackground } from "./ForceFieldBackground";
-
-// Register the ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
-
-const ChevronDown = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="m6 9 6 6 6-6" />
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="11" cy="11" r="8" />
-    <path d="m21 21-4.3-4.3" />
-  </svg>
-);
-
-const PlusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 12h14" />
-    <path d="M12 5v14" />
-  </svg>
-);
-
-// --- UTILITY COMPONENTS ---
-export const ScrollReveal = ({ children, delay = 0, triggerOnce = false }) => {
-  const domRef = useRef();
-
-  useEffect(() => {
-    const el = domRef.current;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          delay: delay / 1000,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            end: "bottom 15%",
-            toggleActions: triggerOnce
-              ? "play none none none"
-              : "play reverse play reverse",
-          },
-        },
-      );
-    });
-
-    return () => ctx.revert();
-  }, [delay, triggerOnce]);
-
-  return (
-    <div ref={domRef} className="w-full h-full will-change-transform">
-      {children}
-    </div>
-  );
-};
 
 export const Card = forwardRef(({ customClass, ...rest }, ref) => (
   <div
@@ -145,43 +50,37 @@ export const CardSwap = ({
   easing = "elastic",
   children,
 }) => {
-  const childArr = useMemo(() => Children.toArray(children), [children]);
+  const config =
+    easing === "elastic"
+      ? {
+          ease: "elastic.out(0.6,0.9)",
+          durDrop: 0.85,
+          durMove: 0.85,
+          durReturn: 0.85,
+          promoteOverlap: 0.9,
+          returnDelay: 0.05,
+        }
+      : {
+          ease: "power1.inOut",
+          durDrop: 0.6,
+          durMove: 0.6,
+          durReturn: 0.6,
+          promoteOverlap: 0.45,
+          returnDelay: 0.1,
+        };
 
-  const refs = useMemo(
-    () => childArr.map(() => React.createRef()),
-    [childArr],
-  );
+  const childArr = useMemo(() => Children.toArray(children), [children]);
+  const refs = useMemo(() => childArr.map(() => React.createRef()), [childArr]);
   const order = useRef(Array.from({ length: childArr.length }, (_, i) => i));
   const tlRef = useRef(null);
   const intervalRef = useRef(0);
   const container = useRef(null);
 
-  // Re-sync order ref if children length changes dynamically
   useEffect(() => {
     order.current = Array.from({ length: childArr.length }, (_, i) => i);
   }, [childArr.length]);
 
   useEffect(() => {
-    // FIX: Moved config inside the useEffect so it doesn't trigger dependency warnings
-    const config =
-      easing === "elastic"
-        ? {
-            ease: "elastic.out(0.6,0.9)",
-            durDrop: 0.85,
-            durMove: 0.85,
-            durReturn: 0.85,
-            promoteOverlap: 0.9,
-            returnDelay: 0.05,
-          }
-        : {
-            ease: "power1.inOut",
-            durDrop: 0.6,
-            durMove: 0.6,
-            durReturn: 0.6,
-            promoteOverlap: 0.45,
-            returnDelay: 0.1,
-          };
-
     const total = refs.length;
     refs.forEach((r, i) => {
       if (r.current)

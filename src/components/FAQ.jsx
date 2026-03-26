@@ -20,19 +20,19 @@ export const FAQ = () => {
   ];
 
   return (
-    <section className="py-20 px-6 max-w-3xl mx-auto">
+    <section className="py-20 px-6 max-w-3xl mx-auto pointer-events-none">
       <ScrollReveal>
         <h2 className="text-4xl md:text-5xl font-bold mb-10 text-center">
           System FAQ
         </h2>
       </ScrollReveal>
-      <div className="space-y-4">
+      <div className="space-y-4 pointer-events-auto z-50 relative">
         {faqs.map((faq, i) => (
           <ScrollReveal key={i} delay={i * 100}>
             <div className="rounded-2xl border border-white/10 bg-[#0a0a0f] overflow-hidden hover:border-white/20 transition-colors">
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none cursor-pointer"
               >
                 <span className="font-semibold text-lg">{faq.q}</span>
                 <div

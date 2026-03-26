@@ -79,7 +79,7 @@ export const Timeline = () => {
   }, []);
 
   return (
-    <section className="py-20 px-6 max-w-4xl mx-auto text-center overflow-hidden">
+    <section className="py-20 px-6 max-w-4xl mx-auto text-center overflow-hidden pointer-events-none">
       <ScrollReveal>
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
           Progressive Timeline
@@ -96,7 +96,7 @@ export const Timeline = () => {
           <div
             key={i}
             ref={(el) => (stageRefs.current[i] = el)}
-            className={`w-full flex ${stage.align} mb-12 md:mb-20 relative z-10`}
+            className={`w-full flex ${stage.align} mb-12 md:mb-20 relative z-10 pointer-events-auto`}
           >
             <div
               className={`min-w-[280px] sm:min-w-[320px] p-6 md:p-8 rounded-3xl bg-[#0a0a0f] border ${stage.color} hover:scale-105 transition-transform duration-300 cursor-pointer flex items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.6)]`}

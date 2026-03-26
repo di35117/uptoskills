@@ -4,7 +4,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const ScrollReveal = ({ children, delay = 0, triggerOnce = false }) => {
+export const ScrollReveal = ({
+  children,
+  delay = 0,
+  triggerOnce = false,
+  className = "",
+}) => {
   const domRef = useRef();
 
   useEffect(() => {
@@ -35,7 +40,10 @@ export const ScrollReveal = ({ children, delay = 0, triggerOnce = false }) => {
   }, [delay, triggerOnce]);
 
   return (
-    <div ref={domRef} className="w-full h-full will-change-transform">
+    <div
+      ref={domRef}
+      className={`w-full h-full will-change-transform ${className}`}
+    >
       {children}
     </div>
   );

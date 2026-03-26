@@ -77,7 +77,7 @@ export const FeatureGrid = () => {
   ];
 
   return (
-    <section className="py-20 px-6 max-w-7xl mx-auto">
+    <section className="py-20 px-6 max-w-7xl mx-auto pointer-events-none">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -126,7 +126,10 @@ export const FeatureGrid = () => {
         </div>
       </ScrollReveal>
 
-      <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div
+        ref={gridRef}
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 pointer-events-auto"
+      >
         {features.map((f, i) => (
           <ScrollReveal key={i} delay={i * 50}>
             <ParticleCard

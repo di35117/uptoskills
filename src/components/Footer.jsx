@@ -210,7 +210,7 @@ const IconMail = () => (
 );
 
 export const Footer = () => (
-  <footer className="bg-[#0e1525] pt-16 pb-12 px-6 relative z-20">
+  <footer className="bg-[#0e1525] pt-16 pb-12 px-6 relative z-20 pointer-events-auto">
     <div className="max-w-7xl mx-auto">
       <div className="flex flex-col items-center justify-center text-center mb-12">
         <div className="flex items-center justify-center mb-4">

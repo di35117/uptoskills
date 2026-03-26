@@ -68,16 +68,16 @@ const navItems = [
 
 const UserActions = () => (
   <div className="flex flex-row items-center gap-4">
-    <button className="p-2 text-gray-300 transition bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-800 hover:text-white">
+    <button className="p-2 text-gray-300 transition bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-800 hover:text-white pointer-events-auto cursor-pointer z-50">
       <NavSearchIcon />
     </button>
-    <button className="text-gray-300 transition hover:text-white">
+    <button className="text-gray-300 transition hover:text-white pointer-events-auto cursor-pointer z-50">
       <ChatIcon />
     </button>
-    <button className="text-gray-300 transition hover:text-white">
+    <button className="text-gray-300 transition hover:text-white pointer-events-auto cursor-pointer z-50">
       <NotificationIcon />
     </button>
-    <button className="relative w-9 h-9 overflow-hidden border-2 border-orange-500 rounded-full ml-1">
+    <button className="relative w-9 h-9 overflow-hidden border-2 border-orange-500 rounded-full ml-1 pointer-events-auto cursor-pointer z-50">
       <img
         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=0284c7"
         alt="User Profile"
@@ -93,7 +93,7 @@ const DropdownMenu = ({ links }) => (
       <li key={index}>
         <a
           href="#"
-          className="block px-5 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white"
+          className="block px-5 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-800 hover:text-white pointer-events-auto cursor-pointer z-50"
         >
           {link}
         </a>
@@ -118,18 +118,15 @@ export const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0e1525]/70 backdrop-blur-md">
+    <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0e1525]/70 backdrop-blur-md pointer-events-auto">
       <div className="flex flex-row items-center justify-between px-6 h-20 mx-auto max-w-7xl">
-        {/* Left Side: Logo & Menu Button */}
         <div className="flex flex-row items-center gap-4 h-full">
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="text-gray-200 focus:outline-none md:hidden"
+            className="text-gray-200 focus:outline-none md:hidden pointer-events-auto cursor-pointer z-50"
           >
             <MenuIcon />
           </button>
-          {/* Logo */}
           <img
             src="https://res.cloudinary.com/dffm4zxpc/image/upload/v1774514098/uptoskillslogo-removebg-preview_vjal22.webp"
             alt="UptoSkills Logo"
@@ -137,7 +134,6 @@ export const Navbar = () => {
           />
         </div>
 
-        {/* Center Side: Nav Links (Desktop) */}
         <ul className="flex-row items-center gap-8 hidden md:flex h-full">
           {navItems.map((item, index) => (
             <li
@@ -146,7 +142,7 @@ export const Navbar = () => {
               onMouseEnter={() => setActiveDropdown(item.name)}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <button className="flex flex-row items-center gap-1.5 py-2.5 text-[15px] font-semibold text-gray-200 transition hover:text-white">
+              <button className="flex flex-row items-center gap-1.5 py-2.5 text-[15px] font-semibold text-gray-200 transition hover:text-white pointer-events-auto cursor-pointer z-50">
                 {item.name}
                 <NavChevronDown />
               </button>
@@ -157,29 +153,24 @@ export const Navbar = () => {
           ))}
         </ul>
 
-        {/* Right Side: Icons, Profile, Button */}
         <div className="flex flex-row items-center gap-6">
-          {/* User Icons (hidden on mobile, inside drawer) */}
           <div className="hidden md:block">
             <UserActions />
           </div>
 
-          {/* Enterprise Button */}
-          <button className="flex flex-row items-center gap-1.5 px-6 py-2.5 text-sm font-bold text-white transition rounded-full bg-gradient-to-r from-orange-500 to-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:opacity-90 hidden md:flex">
+          <button className="flex flex-row items-center gap-1.5 px-6 py-2.5 text-sm font-bold text-white transition rounded-full bg-gradient-to-r from-orange-500 to-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:opacity-90 hidden md:flex pointer-events-auto cursor-pointer z-50">
             For Enterprise
           </button>
         </div>
       </div>
 
-      {/* --- Mobile Fullscreen Menu --- */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[60] bg-[#0e1525] flex flex-col md:hidden w-full h-[100dvh] overflow-hidden">
-          {/* Header inside mobile menu */}
+        <div className="fixed inset-0 z-[60] bg-[#0e1525] flex flex-col md:hidden w-full h-[100dvh] overflow-hidden pointer-events-auto">
           <div className="flex flex-row items-center justify-between px-6 h-20 border-b border-white/10 shrink-0">
             <div className="flex flex-row items-center gap-4 h-full">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-200 focus:outline-none"
+                className="text-gray-200 focus:outline-none pointer-events-auto cursor-pointer z-50"
               >
                 <CloseIcon />
               </button>
@@ -191,27 +182,24 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="flex flex-col flex-grow gap-6 overflow-y-auto p-6">
-            {/* Search */}
             <div className="flex flex-row items-center w-full gap-3 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg shrink-0">
               <NavSearchIcon />
               <input
                 type="search"
                 placeholder="Search..."
-                className="flex-grow w-full text-sm text-white placeholder-gray-400 bg-transparent outline-none"
+                className="flex-grow w-full text-sm text-white placeholder-gray-400 bg-transparent outline-none pointer-events-auto z-50"
               />
             </div>
 
-            {/* User Actions Mobile */}
             <div className="flex justify-around items-center border-b border-gray-800 pb-6 shrink-0">
-              <button className="text-gray-300 transition hover:text-white">
+              <button className="text-gray-300 transition hover:text-white pointer-events-auto cursor-pointer z-50">
                 <ChatIcon />
               </button>
-              <button className="text-gray-300 transition hover:text-white">
+              <button className="text-gray-300 transition hover:text-white pointer-events-auto cursor-pointer z-50">
                 <NotificationIcon />
               </button>
-              <button className="relative w-10 h-10 overflow-hidden border-2 border-orange-500 rounded-full">
+              <button className="relative w-10 h-10 overflow-hidden border-2 border-orange-500 rounded-full pointer-events-auto cursor-pointer z-50">
                 <img
                   src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=0284c7"
                   alt="User Profile"
@@ -220,12 +208,11 @@ export const Navbar = () => {
               </button>
             </div>
 
-            {/* Nav Links */}
             <ul className="flex flex-col gap-4 shrink-0">
               {navItems.map((item, index) => (
                 <li key={index} className="group flex flex-col">
                   <button
-                    className="flex flex-row items-center justify-between w-full py-2 text-base font-semibold text-gray-200 transition hover:text-white"
+                    className="flex flex-row items-center justify-between w-full py-2 text-base font-semibold text-gray-200 transition hover:text-white pointer-events-auto cursor-pointer z-50"
                     onClick={(e) => {
                       const ul = e.currentTarget.nextElementSibling;
                       ul.classList.toggle("hidden");
@@ -239,7 +226,7 @@ export const Navbar = () => {
                       <li key={idx}>
                         <a
                           href="#"
-                          className="text-sm font-medium text-gray-400 transition hover:text-white block py-1"
+                          className="text-sm font-medium text-gray-400 transition hover:text-white block py-1 pointer-events-auto cursor-pointer z-50"
                         >
                           {link}
                         </a>
@@ -250,8 +237,7 @@ export const Navbar = () => {
               ))}
             </ul>
 
-            {/* Enterprise Button */}
-            <button className="flex flex-row items-center justify-center w-full gap-1.5 px-8 py-3.5 mt-auto mb-4 font-bold text-white transition rounded-full shadow-[0_0_15px_rgba(249,115,22,0.3)] bg-gradient-to-r from-orange-500 to-orange-600 hover:opacity-90 shrink-0">
+            <button className="flex flex-row items-center justify-center w-full gap-1.5 px-8 py-3.5 mt-auto mb-4 font-bold text-white transition rounded-full shadow-[0_0_15px_rgba(249,115,22,0.3)] bg-gradient-to-r from-orange-500 to-orange-600 hover:opacity-90 shrink-0 pointer-events-auto cursor-pointer z-50">
               For Enterprise
             </button>
           </div>

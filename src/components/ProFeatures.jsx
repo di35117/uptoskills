@@ -38,7 +38,7 @@ export const ProFeatures = () => {
   ];
 
   return (
-    <section className="py-32 px-6 max-w-7xl mx-auto overflow-hidden">
+    <section className="py-32 px-6 max-w-7xl mx-auto overflow-hidden pointer-events-none">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -72,7 +72,7 @@ export const ProFeatures = () => {
       </ScrollReveal>
 
       <ScrollReveal delay={200}>
-        <div className="flex justify-center items-center py-10">
+        <div className="flex justify-center items-center py-10 pointer-events-auto">
           <div>
             <div className="grid grid-cols-2 gap-4 sm:gap-6 rotate-45">
               {features.map((f, i) => (

@@ -222,7 +222,6 @@ export function ForceFieldBackground({
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
       <div
         ref={containerRef}
-        /* Mobile: pointer-events-none ensures it doesn't block scroll. Desktop: interacts with mouse. */
         className="absolute inset-0 z-0 pointer-events-none md:pointer-events-auto"
       ></div>
     </div>
