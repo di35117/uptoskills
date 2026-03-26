@@ -47,6 +47,7 @@ export const NeonCreepyButton = ({
       onTouchMove={updateEyes}
       onMouseLeave={resetEyes}
       onClick={onClick}
+      style={{ touchAction: "pan-y", ...props.style }}
       {...props}
     >
       <span className="absolute inset-0 bg-[#050508] rounded-full border border-white/5 z-0 shadow-lg"></span>

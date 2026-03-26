@@ -194,7 +194,7 @@ export const ParticleCard = ({
     <div
       ref={cardRef}
       className={className}
-      style={{ position: "relative", overflow: "hidden" }}
+      style={{ position: "relative", overflow: "hidden", touchAction: "pan-y" }}
     >
       {children}
     </div>
